@@ -40,9 +40,9 @@ def get_transfer_steps(get_cinder_client):
     Returns:
         function: function to get transfer steps.
     """
-    def _get_transfer_steps(version, is_api, **credentials):
+    def _get_transfer_steps(version, **credentials):
         return steps.VolumeTransferSteps(
-            get_cinder_client(version, is_api, **credentials).transfers)
+            get_cinder_client(version, **credentials).transfers)
 
     return _get_transfer_steps
 
@@ -59,8 +59,7 @@ def transfer_steps(get_transfer_steps, cleanup_transfers):
     Yields:
         VolumeTransferSteps: instantiated transfer steps.
     """
-    _transfer_steps = get_transfer_steps(
-        config.CURRENT_CINDER_VERSION, is_api=False)
+    _transfer_steps = get_transfer_steps(config.CURRENT_CINDER_VERSION)
     transfers = _transfer_steps.get_transfers(all_projects=True, check=False)
     transfer_ids_before = {transfer.id for transfer in transfers}
 

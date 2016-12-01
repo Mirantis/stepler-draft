@@ -43,9 +43,9 @@ def get_volume_steps(get_cinder_client):
     Returns:
         function: function to get volume steps
     """
-    def _get_volume_steps(version, is_api, **credentials):
+    def _get_volume_steps(version, **credentials):
         return steps.VolumeSteps(
-            get_cinder_client(version, is_api, **credentials).volumes)
+            get_cinder_client(version, **credentials).volumes)
 
     return _get_volume_steps
 
@@ -80,8 +80,7 @@ def volume_steps(unexpected_volumes_cleanup,
     Yields:
         VolumeSteps: instantiated volume steps
     """
-    _volume_steps = get_volume_steps(
-        config.CURRENT_CINDER_VERSION, is_api=False)
+    _volume_steps = get_volume_steps(config.CURRENT_CINDER_VERSION)
     volumes = _volume_steps.get_volumes(all_projects=True, check=False)
     volume_ids_before = {volume.id for volume in volumes}
 
@@ -104,9 +103,8 @@ def primary_volumes(get_volume_steps,
         uncleanable (AttrDict): Data structure with skipped resources.
     """
     volume_ids_before = set()
-    for volume in get_volume_steps(
-            config.CURRENT_CINDER_VERSION, is_api=False).get_volumes(
-                all_projects=True, check=False):
+    volume_steps = get_volume_steps(config.CURRENT_CINDER_VERSION)
+    for volume in volume_steps.get_volumes(all_projects=True, check=False):
         uncleanable.volume_ids.add(volume.id)
         volume_ids_before.add(volume.id)
 
@@ -114,8 +112,7 @@ def primary_volumes(get_volume_steps,
 
     if config.CLEANUP_UNEXPECTED_AFTER_ALL:
         cleanup_volumes(
-            get_volume_steps(
-                config.CURRENT_CINDER_VERSION, is_api=False),
+            get_volume_steps(config.CURRENT_CINDER_VERSION),
             uncleanable_ids=volume_ids_before)
 
 

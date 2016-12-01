@@ -29,7 +29,6 @@ __all__ = [
     'public_network',
     'network_steps',
     'get_network_steps',
-    'baremetal_network',
 ]
 
 
@@ -115,16 +114,3 @@ def public_network(network_steps):
     """
     params = {'router:external': True, 'status': 'ACTIVE'}
     return network_steps.get_network(**params)
-
-
-@pytest.fixture
-def baremetal_network(network_steps):
-    """Function fixture to find baremetal network before test.
-
-     Args:
-         network_steps (object): instantiated network steps
-
-    Returns:
-        object: baremetal network
-    """
-    return network_steps.get_network_by_name(name=config.BAREMETAL_NETWORK)

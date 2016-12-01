@@ -40,9 +40,9 @@ def get_backup_steps(get_cinder_client):
     Returns:
         function: function to get backup steps
     """
-    def _get_backup_steps(version, is_api, **credentials):
+    def _get_backup_steps(version, **credentials):
         return steps.BackupSteps(
-            get_cinder_client(version, is_api, **credentials).backups)
+            get_cinder_client(version, **credentials).backups)
 
     return _get_backup_steps
 
@@ -58,8 +58,7 @@ def backup_steps(get_backup_steps, cleanup_backups):
     Yields:
         stepler.cinder.steps.BackupSteps: instantiated backup steps
     """
-    _backup_steps = get_backup_steps(
-        config.CURRENT_CINDER_VERSION, is_api=False)
+    _backup_steps = get_backup_steps(config.CURRENT_CINDER_VERSION)
 
     backups = _backup_steps.get_backups(all_projects=True, check=False)
     backup_ids_before = {backup.id for backup in backups}

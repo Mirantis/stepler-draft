@@ -19,7 +19,6 @@ Includes fixtures available in global scope among all tests.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from stepler.baremetal.conftest import *  # noqa
 from stepler.cinder.conftest import *  # noqa
 from stepler.fixtures import *  # noqa
 from stepler.glance.conftest import *  # noqa
@@ -77,14 +76,9 @@ __all__ = sorted([  # sort for documentation
     'heat_resource_type_steps',
     'get_template_path',
 
-    'api_glance_client_v1',
-    'api_glance_client_v2',
     'get_glance_client',
     'glance_client_v1',
     'glance_client_v2',
-    'api_glance_steps',
-    'api_glance_steps_v1',
-    'api_glance_steps_v2',
     'cirros_image',
     'get_glance_steps',
     'glance_steps',
@@ -124,18 +118,32 @@ __all__ = sorted([  # sort for documentation
     'router',
     'add_router_interfaces',
     'create_port',
-    'neutron_client',
-    'network_steps',
-    'router_steps',
-    'subnet_steps',
     'port_steps',
+    'neutron_client',
     'get_neutron_client',
+    'network_steps',
     'get_network_steps',
+    'router_steps',
     'get_router_steps',
+    'subnet_steps',
     'get_subnet_steps',
-    'baremetal_network',
     'net_subnet_router',
+    'neutron_2_networks',
+    'neutron_2_servers_different_networks',
+    'neutron_2_servers_diff_nets_with_floating',
+    'neutron_2_servers_same_network',
+    'neutron_2_servers_iperf_different_networks',
+    'get_agent_steps',
     'agent_steps',
+    'reschedule_router_active_l3_agent',
+    'get_neutron_quota_steps',
+    'neutron_quota_steps',
+    'change_neutron_quota',
+
+    'get_availability_zone_steps',
+    'availability_zone_steps',
+    'nova_availability_zone',
+    'nova_availability_zone_hosts',
 
     'create_flavor',
     'flavor',
@@ -145,61 +153,49 @@ __all__ = sorted([  # sort for documentation
     'nova_create_floating_ip',
     'nova_floating_ip',
     'nova_floating_ip_steps',
+
     'host_steps',
+
     'hypervisor_steps',
+    'sorted_hypervisors',
+
     'keypair',
     'keypair_steps',
-    'nova_client',
+    'keypairs_cleanup',
+
     'get_nova_client',
+    'nova_client',
+    'disable_nova_config_drive',
+    'skip_live_migration_tests',
+    'unlimited_live_migrations',
+    'nova_ceph_enabled',
+
     'create_security_group',
     'security_group',
     'security_group_steps',
+
     'nova_volume_steps',
     'attach_volume_to_server',
     'detach_volume_from_server',
+
     'create_server_context',
     'create_servers_context',
+    'get_server_steps',
+    'get_ssh_proxy_cmd',
     'server',
     'server_steps',
-    'get_ssh_proxy_cmd',
-    'disable_nova_config_drive',
     'live_migration_server',
+    'live_migration_servers',
+    'live_migration_servers_with_volumes',
+    'servers_cleanup',
     'generate_traffic',
-
-    'get_availability_zone_steps',
-    'availability_zone_steps',
-    'nova_availability_zone',
-    'nova_availability_zone_hosts',
+    'unexpected_servers_cleanup',
 
     'os_faults_client',
     'os_faults_steps',
     'patch_ini_file_and_restart_services',
     'execute_command_with_rollback',
     'nova_api_node',
-
-    'get_ironic_node_steps',
-    'unexpected_node_cleanup',
-    'ironic_node_steps',
-    'cleanup_nodes',
-    'primary_nodes',
-    'ironic_node',
-    'get_ironic_port_steps',
-    'ironic_port',
-    'ironic_port_steps',
-    'ironic_chassis_steps',
-    'get_ironic_chassis_steps',
-    'cleanup_chassis',
-    'primary_chassis',
-    'unexpected_chassis_cleanup',
-
-    'api_ironic_client_v1',
-    'get_ironic_client',
-    'ironic_client_v1',
-    'get_api_ironic_client',
-    'get_api_ironic_steps',
-    'ironic_steps_v1',
-    'api_ironic_steps_v1',
-    'api_ironic_steps',
 ])
 
 _plugins = [

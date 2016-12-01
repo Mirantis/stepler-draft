@@ -17,7 +17,6 @@ Glance fixtures
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
 import logging
 
 from hamcrest import assert_that, is_not  # noqa
@@ -29,9 +28,6 @@ from stepler.third_party import context
 from stepler.third_party import utils
 
 __all__ = [
-    'api_glance_steps',
-    'api_glance_steps_v1',
-    'api_glance_steps_v2',
     'cirros_image',
     'create_images_context',
     'get_glance_steps',
@@ -41,7 +37,6 @@ __all__ = [
     'ubuntu_image',
     'images_cleanup',
     'ubuntu_xenial_image',
-    'baremetal_ubuntu_image',
 ]
 
 LOGGER = logging.getLogger(__name__)
@@ -93,8 +88,8 @@ def get_glance_steps(request, get_glance_client):
     Returns:
         function: function to get glance steps
     """
-    def _get_glance_steps(version, is_api):
-        glance_client = get_glance_client(version, is_api)
+    def _get_glance_steps(version):
+        glance_client = get_glance_client(version)
 
         glance_steps_cls = {
             '1': steps.GlanceStepsV1,
@@ -116,7 +111,7 @@ def glance_steps_v1(get_glance_steps):
     Returns:
         GlanceStepsV1: instantiated glance steps v1
     """
-    return get_glance_steps(version='1', is_api=False)
+    return get_glance_steps(version='1')
 
 
 @pytest.fixture
@@ -129,33 +124,7 @@ def glance_steps_v2(get_glance_steps):
     Returns:
         GlanceStepsV2: instantiated glance steps v2
     """
-    return get_glance_steps(version='2', is_api=False)
-
-
-@pytest.fixture
-def api_glance_steps_v1(get_glance_steps):
-    """Function fixture to get API glance steps for v1.
-
-    Args:
-        get_glance_steps (function): function to get glance steps
-
-    Returns:
-        GlanceStepsV1: instantiated glance steps v1
-    """
-    return get_glance_steps(version='1', is_api=True)
-
-
-@pytest.fixture
-def api_glance_steps_v2(get_glance_steps):
-    """Function fixture to get API glance steps for v2.
-
-    Args:
-        get_glance_steps (function): function to get API glance steps
-
-    Returns:
-        GlanceSteps: instantiated glance steps
-    """
-    return get_glance_steps(version='2', is_api=True)
+    return get_glance_steps(version='2')
 
 
 @pytest.fixture
@@ -169,25 +138,10 @@ def glance_steps(get_glance_steps, images_cleanup):
     Yields:
         object: instantiated glance steps of current version
     """
-    _glance_steps = get_glance_steps(
-        version=config.CURRENT_GLANCE_VERSION, is_api=False)
+    _glance_steps = get_glance_steps(version=config.CURRENT_GLANCE_VERSION)
 
     with images_cleanup(_glance_steps):
         yield _glance_steps
-
-
-@pytest.fixture
-def api_glance_steps(get_glance_steps):
-    """Function fixture to get API glance steps.
-
-    Args:
-        get_glance_steps (function): function to get API glance steps
-
-    Returns:
-        GlanceSteps: instantiated glance steps
-    """
-    return get_glance_steps(
-        version=config.CURRENT_GLANCE_VERSION, is_api=True)
 
 
 @pytest.fixture
@@ -238,10 +192,10 @@ def create_images_context(get_glance_steps, uncleanable):
     @context.context
     def _create_images_context(image_names, image_url, **kwargs):
         images = get_glance_steps(
-            version=config.CURRENT_GLANCE_VERSION, is_api=False).create_images(
-                image_names=image_names,
-                image_path=utils.get_file_path(image_url),
-                **kwargs)
+            version=config.CURRENT_GLANCE_VERSION).create_images(
+            image_names=image_names,
+            image_path=utils.get_file_path(image_url),
+            **kwargs)
 
         for image in images:
             uncleanable.image_ids.add(image.id)
@@ -250,7 +204,7 @@ def create_images_context(get_glance_steps, uncleanable):
 
         get_glance_steps(
             version=config.CURRENT_GLANCE_VERSION,
-            is_api=False).delete_images(images)
+        ).delete_images(images)
 
         for image in images:
             uncleanable.image_ids.remove(image.id)
@@ -304,31 +258,4 @@ def cirros_image(create_images_context):
     """
     with create_images_context(utils.generate_ids('cirros'),
                                config.CIRROS_QCOW2_URL) as images:
-        yield images[0]
-
-
-@pytest.fixture(scope='session')
-def baremetal_ubuntu_image(create_images_context):
-    """Session fixture to create baremetal ubuntu image with default options.
-
-    Args:
-        create_images_context (function): function to create images as context
-
-    Returns:
-        object: ubuntu image
-    """
-    if config.BAREMETAL_NODE:
-        image_url = config.BAREMETAL_UBUNTU
-        disk_info = json.dumps(config.BAREMETAL_DISK_INFO)
-    else:
-        image_url = config.BAREMETAL_UBUNTU_FOR_VIRTUAL_NODE
-        disk_info = json.dumps(config.BAREMETAL_DISK_INFO_FOR_VIRTUAL_NODE)
-
-    with create_images_context(utils.generate_ids('baremetal-ubuntu'),
-                               image_url,
-                               disk_format='raw',
-                               container_format='bare',
-                               cpu_arch="x86_64",
-                               hypervisor_type="baremetal",
-                               fuel_disk_info=disk_info) as images:
         yield images[0]

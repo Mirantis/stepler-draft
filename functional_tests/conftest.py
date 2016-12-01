@@ -1,7 +1,7 @@
 """
----------------
-Glance fixtures
----------------
+--------------
+Tests conftest
+--------------
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,20 +17,5 @@ Glance fixtures
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .clients import *  # noqa
-from .images import *  # noqa
-
-__all__ = sorted([  # sort for documentation
-    'cirros_image',
-    'create_images_context',
-    'get_glance_steps',
-    'get_glance_client',
-    'glance_client_v1',
-    'glance_client_v2',
-    'glance_steps',
-    'glance_steps_v1',
-    'glance_steps_v2',
-    'ubuntu_image',
-    'images_cleanup',
-    'ubuntu_xenial_image',
-])
+from stepler.conftest import *  # noqa
+from stepler.conftest import __all__  # noqa

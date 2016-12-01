@@ -103,7 +103,6 @@ Deep to structure
    steps_concept
    common_fixtures
    cinder
-   baremetal
    glance
    heat
    horizon

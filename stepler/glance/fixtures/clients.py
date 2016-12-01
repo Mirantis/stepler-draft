@@ -21,11 +21,7 @@ from glanceclient.v1 import client as client_v1
 from glanceclient.v2 import client as client_v2
 import pytest
 
-from stepler.glance import api_clients
-
 __all__ = [
-    'api_glance_client_v1',
-    'api_glance_client_v2',
     'get_glance_client',
     'glance_client_v1',
     'glance_client_v2',
@@ -42,18 +38,12 @@ def get_glance_client(get_session):
     Returns:
         function: function to get glance client v1
     """
-    def _get_glance_client(version, is_api):
+    def _get_glance_client(version):
         if version == '1':
-            if is_api:
-                return api_clients.ApiClientV1(session=get_session())
-            else:
-                return client_v1.Client(session=get_session())
+            return client_v1.Client(session=get_session())
 
         if version == '2':
-            if is_api:
-                return api_clients.ApiClientV2(session=get_session())
-            else:
-                return client_v2.Client(session=get_session())
+            return client_v2.Client(session=get_session())
 
         raise ValueError("Unexpected glance version: {!r}".format(version))
 
@@ -70,7 +60,7 @@ def glance_client_v1(get_glance_client):
     Returns:
         glanceclient.v1.client.Client: instantiated glance client
     """
-    return get_glance_client(version='1', is_api=False)
+    return get_glance_client(version='1')
 
 
 @pytest.fixture
@@ -83,30 +73,4 @@ def glance_client_v2(get_glance_client):
     Returns:
         glanceclient.v2.client.Client: instantiated glance client
     """
-    return get_glance_client(version='2', is_api=False)
-
-
-@pytest.fixture
-def api_glance_client_v1(get_glance_client):
-    """Function fixture to get API glance client v1.
-
-    Args:
-        get_glance_client (function): function to get glance client
-
-    Returns:
-        api_clients.ApiClientV1: instantiated API glance client v1
-    """
-    return get_glance_client(version='1', is_api=True)
-
-
-@pytest.fixture
-def api_glance_client_v2(get_glance_client):
-    """Function fixture to get API glance client v2.
-
-    Args:
-        get_glance_client (function): function to get glance client
-
-    Returns:
-        api_clients.ApiClientV2: instantiated API glance client v2
-    """
-    return get_glance_client(version='2', is_api=True)
+    return get_glance_client(version='2')

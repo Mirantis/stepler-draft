@@ -60,10 +60,6 @@ UBUNTU_XENIAL_QCOW2_URL = 'https://cloud-images.ubuntu.com/xenial/current/xenial
 FEDORA_QCOW2_URL = 'https://download.fedoraproject.org/pub/fedora/linux/releases/23/Cloud/x86_64/Images/Fedora-Cloud-Base-23-20151030.x86_64.qcow2'  # noqa E501
 CIRROS_QCOW2_URL = 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'  # noqa E501
 UBUNTU_ISO_URL = 'http://archive.ubuntu.com/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/mini.iso'  # noqa E501
-BAREMETAL_UBUNTU = 'http://mos-ironic.vm.mirantis.net/ipukha/dib-user-image-dkms-grub.raw'  # noqa E501
-BAREMETAL_UBUNTU_FOR_VIRTUAL_NODE = 'http://mos-ironic.vm.mirantis.net/ipukha/trusty-server-cloudimg-amd64.img'  # noqa E501
-
-FORCE_API = bool(os.environ.get('FORCE_API_USAGE'))
 
 # TODO(schipiga): copied from mos-integration-tests, need refactor.
 TEST_IMAGE_PATH = os.environ.get("TEST_IMAGE_PATH",
@@ -88,8 +84,6 @@ UBUNTU_USERNAME = 'ubuntu'
 # CURRENT API VERSIONS
 CURRENT_GLANCE_VERSION = '2'
 CURRENT_CINDER_VERSION = '2'
-CURRENT_IRONIC_VERSION = '1'
-CURRENT_IRONIC_MICRO_VERSION = '1.9'
 
 # SERVICES
 CINDER_VOLUME = 'cinder-volume'
@@ -153,27 +147,6 @@ TRANSFER_SHOW_TIMEOUT = 60
 # Glance
 IMAGE_AVAILABLE_TIMEOUT = 5 * 60
 IMAGE_QUEUED_TIMEOUT = 30
-BAREMETAL_DISK_INFO = [{"name": "sda",
-                        "extra": [],
-                        "free_space": 11000,
-                        "type": "disk",
-                        "id": "sda",
-                        "size": 11000,
-                        "volumes": [{"mount": "/",
-                                     "type": "partition",
-                                     "file_system": "ext4",
-                                     "size": 10000}]}]
-BAREMETAL_DISK_INFO_FOR_VIRTUAL_NODE = [{"name": "vda",
-                                         "extra": [],
-                                         "free_space": 11000,
-                                         "type": "disk",
-                                         "id": "vda",
-                                         "size": 11000,
-                                         "volumes": [{"mount": "/",
-                                                      "type": "partition",
-                                                      "file_system": "ext4",
-                                                      "size": 10000}]}]
-
 
 # Nova
 CREDENTIALS_PREFIX = 'stepler_credentials_'
@@ -189,12 +162,6 @@ SERVER_HOST_ATTR = 'OS-EXT-SRV-ATTR:host'
 
 FLAVOR_TINY = 'm1.tiny'
 FLAVOR_SMALL = 'm1.small'
-BAREMETAL_RAM = "16384"
-BAREMETAL_VCPUS = "4"
-BAREMETAL_DISK = "150"
-
-BAREMETAL_RAM_FOR_VIRTUAL_NODE = '3072'
-BAREMETAL_VCPUS_FOR_VIRTUAL_NODE = '1'
 
 ROLE_MEMBER = '_member_'
 
@@ -277,18 +244,6 @@ STACK_CLI_TIMEOUT = 60
 RESOURCE_NAME = 'stepler_cirros_image'
 HEAT_SIMPLE_TEMPLATE_URL = 'https://raw.githubusercontent.com/openstack/heat-templates/master/hot/resource_group/resource_group.yaml'  # noqa
 
-# Ironic
-BAREMETAL_NETWORK = 'baremetal'
-BAREMETAL_NODE = bool(os.environ.get('BAREMETAL_NODE', False))
-
-# CLI clients
-SERVER_LIST_TIMEOUT = 60
-MIGRATION_START_TIMEOUT = 15
-LIVE_EVACUATE_CLI_TIMEOUT = 60
-LIVE_EVACUATE_TIMEOUT = 5 * 60
-IMAGE_CREATION_TIMEOUT = 60
-IMAGE_DOWNLOAD_TIMEOUT = 60
-
 # For DevStack cmd should looks like `source devstack/openrc admin admin`
 OPENRC_ACTIVATE_CMD = os.environ.get('OPENRC_ACTIVATE_CMD', 'source /root/openrc')  # noqa E501
 
@@ -354,35 +309,6 @@ HA_STATE_ACTIVE_ATTRS = {'ha_state': 'active'}
 ROUTER_AVAILABLE_TIMEOUT = 60
 
 LOCAL_CIDR = '192.168.3.0/24'
-
-# Horizon
-BROWSER_WINDOW_SIZE = map(
-    int, (os.environ.get('BROWSER_WINDOW_SIZE', ('1920,1080'))).split(','))
-
-UI_TIMEOUT = 30
-ACTION_TIMEOUT = 60
-EVENT_TIMEOUT = 180
-
-BIG_FILE_SIZE = 1024 * 1024 * 1024 * 100  # 100 Gb
-LONG_ACTION_TIMEOUT = 60 * 60  # 1 hour (timeout for 'Working')
-LONG_EVENT_TIMEOUT = 60 * 60 * 3  # 3 hours (timeout for 'Saving')
-
-OS_DASHBOARD_URL = os.environ.get('OS_DASHBOARD_URL')  # should be defined!
-VIRTUAL_DISPLAY = os.environ.get('VIRTUAL_DISPLAY')
-
-DEFAULT_ADMIN_NAME = 'admin'
-DEFAULT_ADMIN_PASSWD = 'admin'
-DEFAULT_ADMIN_PROJECT = 'admin'
-
-ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT = list(generate_ids('admin', count=3))
-USER_NAME, USER_PASSWD, USER_PROJECT = list(generate_ids('user', count=3))
-
-FLOATING_NETWORK_NAME = 'admin_floating_net'
-INTERNAL_NETWORK_NAME = next(generate_ids('internal_net'))
-INTERNAL_SUBNET_NAME = next(generate_ids('internal_subnet'))
-ROUTER_NAME = next(generate_ids('router'))
-
-XVFB_LOCK = '/tmp/xvfb.lock'
 
 # Volume creating constants
 IMAGE_SOURCE = 'Image'
